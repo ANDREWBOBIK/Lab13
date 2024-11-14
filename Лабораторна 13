@@ -1,0 +1,120 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------Приклад кодну Коновалова Андрія------------------------------------------------------------------------------------------------------------------------------------------------------------
+ import csv
+import json
+
+# Данні для запису у CSV
+data = [
+    {"id": 1, "name": "Андрій", "age": 22},
+    {"id": 2, "name": "Олександр", "age": 21}
+]
+
+# Функція запису даних у CSV файл
+def write_to_csv(filename, data):
+    try:
+        with open(filename, mode='w', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=["id", "name", "age"])
+            writer.writeheader()
+            writer.writerows(data)
+        print(f"Дані успішно записані в {filename}")
+    except IOError as e:
+        print(f"Помилка запису в файл {filename}: {e}")
+
+# Функція переписування даних із CSV у JSON
+def csv_to_json(csv_filename, json_filename):
+    try:
+        with open(csv_filename, mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            rows = [row for row in csv_reader]
+        with open(json_filename, mode='w') as json_file:
+            json.dump(rows, json_file, indent=4)
+        print(f"Дані з {csv_filename} успішно записані в {json_filename}")
+    except IOError as e:
+        print(f"Помилка роботи з файлами: {e}")
+
+# Створення CSV і JSON файлів
+write_to_csv("students.csv", data)
+csv_to_json("students.csv", "students.json")
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------Зміст json. файлу який імпортується в csv. файл---------------------------------------------------------------------------------------------------------------------------------------------
+[
+    {
+        "id": "1",
+        "name": "\u0410\u043d\u0434\u0440\u0456\u0439",
+        "age": "22"
+    },
+    {
+        "id": "2",
+        "name": "\u041e\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
+        "age": "21"
+    }
+]
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------Приклад кодну Мололики Олександра -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import csv
+import json
+
+# Нові дані для додавання
+new_data = [
+    {"id": 3, "name": "Андрій", "age": 23},
+    {"id": 4, "name": "Олександр", "age": 20}
+]
+
+# Функція переписування даних із JSON у CSV з додаванням нових рядків без дублювання
+def json_to_csv(json_filename, csv_filename, new_data):
+    try:
+        # Читаємо дані з JSON файлу
+        with open(json_filename, mode='r') as json_file:
+            data = json.load(json_file)
+
+        # Перевірка на дублювання за id (додаємо лише нові записи)
+        existing_ids = {student['id'] for student in data}
+        unique_new_data = [student for student in new_data if student['id'] not in existing_ids]
+
+        # Додаємо нові, унікальні записи до даних
+        data.extend(unique_new_data)
+
+        # Записуємо об'єднані дані у CSV файл
+        with open(csv_filename, mode='w', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=["id", "name", "age"])
+            writer.writeheader()  # Записуємо заголовки
+            writer.writerows(data)  # Записуємо рядки даних
+        print(f"Дані з {json_filename} успішно переписані в {csv_filename} з доданими новими рядками")
+    except IOError as e:
+        print(f"Помилка роботи з файлами: {e}")
+    except json.JSONDecodeError as e:
+        print(f"Помилка декодування JSON: {e}")
+
+# Викликаємо функцію
+json_to_csv("students.json", "students.csv", new_data)
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------Зміст json. файлу який імпортується в csv. файл---------------------------------------------------------------------------------------------------------------------------------------------
+[
+    {
+        "id": "1",
+        "name": "\u0410\u043d\u0434\u0440\u0456\u0439",
+        "age": "22"
+    },
+    {
+        "id": "2",
+        "name": "\u041e\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
+        "age": "21"
+    }
+]
